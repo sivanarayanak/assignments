@@ -1,0 +1,202 @@
+
+python list problem:
+
+def name(first_name,last_name):
+    full_name=[]
+    n=len(first_name)
+    if (len(first_name)==len(last_name)):        
+        for i in range(n):
+                full_name.append(first_name[i]+" "+last_name[i])
+    print(full_name)
+def main():
+    length=int(input())
+    first_name=list()
+    last_name=list()
+    for i in range(length):
+        first_name.append(input("enter first name:"))
+        print("\n")
+        last_name.append(input("enter last name:"))
+        print("\n")
+    name(first_name,last_name)
+
+if __name__ == "__main__":
+    main()
+--------------------------------------------------------------------------------------------------------------------------
+python file -path problem:
+
+import os
+def get_file_names():
+    path="C:\\Users\\skesi\\OneDrive\\Documents\\sample"
+    full_path=[]
+    file_names=[]
+    file_name=os.listdir(path)
+    for i in file_name:
+        
+        file_names.append(i)
+        full_path.append(os.path.join(path,i))
+    for i in range(len(full_path)):
+        print("file name is: ",file_names[i])
+        print("full path is: ", full_path[i])
+        print("\n")
+        
+    
+    output_file = open("C:\\Users\\skesi\\OneDrive\\Documents\\output_file\\root.txt", 'w')
+    output_file.writelines(file_names)
+    output_file.close()
+
+get_file_names()
+-------------------------------------------------------------------------------------------------------------------
+Python Date problem:
+
+def example(currdate,q):
+    n=len(currdate)
+    mm=int(currdate[n-2:])
+    y=int(currdate[:n-2])
+    if (mm<10):
+        if(mm!=1):
+            prev_month=currdate[:n-2]+"0"+str(mm-1)
+            future_date=str(y+1)+"0"+str(mm-1)
+        else:
+            prev_month=str(y-1)+"12"
+            future_date=str(y)+"12"
+    else:
+        prev_month=currdate[:n-2]+str(mm-1)
+        future_date=str(y+1)+str(mm-1)
+        
+    if (q==1):
+        prev_quater="Q"+str(q+3)+"_"+str(y-1)
+    else:
+        prev_quater="Q"+str(q-1)+"_"+str(y)
+#     future_date=str(y+1)+"0"+str(mm-1)
+    if (q==4):
+        
+        future_quater="Q"+str(q-3)+"_"+str(y+1)
+    else:
+        future_quater="Q"+str(q+1)+"_"+str(y)
+
+    dict1=dict({'prev_date':prev_month,'prev_quater':prev_quater,'future_date':future_date,'future_quater':future_quater})
+    return dict1
+def main():
+    curr_date=input()
+    quater=int(input())
+    print(example(curr_date,quater))
+if __name__ == "__main__":
+    main()
+--------------------------------------------------------------------------------------------------------------------------------
+
+lets say I have 2 defined different table one is sales table in that we have transaction id , amount , coustmor id ,date and number of units product it  another one table is product table in that we have product id, product name ,product category. 
+
+question is list out the products not have any sales in last 2 consecutive weeks
+
+
+create table product(product_id int primary key, product_name varchar(50),product_category varchar(50));
+
+create table sales(transaction_id int primary key, amount float, customer_id varchar(50),T_date Date,units int,product_id INT,
+    ->     FOREIGN KEY (product_id) REFERENCES product(product_id));
+
+
+-- Insert sample data into the sales table
+INSERT INTO sales (transaction_id, amount, customer_id, T_date, units,product_id)
+VALUES
+    (1, 100, 1, '2023-05-15', 2, 2),
+    (2, 150, 2, '2023-05-18', 3, 3),
+    (3, 200, 1, '2023-05-20', 1, 1),
+    (4, 120, 3, '2023-05-25', 2, 3),
+    (5, 80, 2, '2023-05-26', 4, 1);
+
+-- Insert sample data into the product table
+INSERT INTO product (product_id, product_name, product_category)
+VALUES
+    (1, 'A', 'X'),
+    (2, 'B', 'Y'),
+    (3, 'C', 'X'),
+    (4, 'D', 'Z');
+
+
+select p. product_id,p.product_name,p.product_category from product p where p.product_id NOT IN(select s.product_id from sales s where exists( select 1 from sales s1 where s.pro
+duct_id=s1.product_id and DATEDIFF(s1.T_date,s.T_date)=14));
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Write an SQL query to find employee_id of all employees that directly or indirectly report their work to the head of the company.
+The indirect relation between managers will not exceed 3 managers as the company is small.
+Return result table in any order without duplicates.
+The query result format is in the following example:
+Employees table:
++-------------+---------------+------------+
+| employee_id | employee_name | manager_id |
++-------------+---------------+------------+
+| 1           | Boss          | 1          |
+| 3           | Alice         | 3          |
+| 2           | Bob           | 1          |
+| 4           | Daniel        | 2          |
+| 7           | Luis          | 4          |
+| 8           | Jhon          | 3          |
+| 9           | Angela        | 8          |
+| 77          | Robert        | 1          |
++-------------+---------------+------------+
+Output should look like:
++-------------+
+| employee_id |
++-------------+
+| 2           |
+| 77          |
+| 4           |
+| 7           |
++-------------+
+Explanation:
+The head of the company is the employee with employee_id 1.
+The employees with employee_id 2 and 77 report their work directly to the head of the company.
+The employee with employee_id 4 report his work indirectly to the head of the company 4 --> 2 --> 1. 
+The employee with employee_id 7 report his work indirectly to the head of the company 7 --> 4 --> 2 --> 1.
+The employees with employee_id 3, 8 and 9 don't report their work to head of company directly or indirectly.
+
+
+
+
+
+mysql> select employee_id from employee where  manager_id=1 and  employee_id!= manager_id union all select employee_id from employee where manager_id in(select employee_id from employe
+e where  manager_id=1 and  employee_id!=manager_id) union all select employee_id from employee where manager_id in (select employee_id from employee where manager_id in(select employee
+_id from employee where  manager_id=1 and  employee_id!= manager_id));
++-------------+
+| employee_id |
++-------------+
+|           2 |
+|          77 |
+|           4 |
+|           7 |
++-------------+
+------------------------------------------------------------------------------------------------------------------------
+
+Hive-problem
+
+CREATE TABLE cust_1 (
+  cust_id INT,
+  prod_name ARRAY<STRING>,
+  price ARRAY<INT>
+)
+STORED AS ORC;
+
+
+INSERT INTO TABLE cust_1
+SELECT 111, array("a", "b", "c"), array(10, 20, 30)
+UNION ALL
+SELECT 112, array("d", "e", "f"), array(30, 20, 40);
+
+
+SELECT
+  c.cust_id,
+  p.product_name,
+  t.price
+FROM
+  cust_1 c
+LATERAL VIEW posexplode(c.prod_name) p AS pos, product_name
+LATERAL VIEW posexplode(c.price) t AS pos,price
+WHERE
+  t.pos = p.pos;
+------------------------------------------------------------------------------------------------------------
+Date Sql-assignment
+
+select d.id,d.date,((((round(d.date/100,0))-(round(min(d1.date)/100,0)))*12)+((round(d.date%100,0))-(round(min(d1.date)%100,0)))) as month_diff from date d join date d1 on d.id=d1.id group by d.id,d.date;
+
+------------------------------------------------------------------------------------------------
