@@ -1,0 +1,42 @@
+## store SQL problem
+SELECT s.store_id, COUNT(s.cust_id) AS count, s.zip_code
+FROM store s
+JOIN (
+    SELECT s1.cust_id, MAX(s1.t_date) AS max_date
+    FROM store s1
+    JOIN store s2 ON s1.cust_id = s2.cust_id
+    GROUP BY s1.cust_id
+) t ON s.cust_id = t.cust_id AND s.t_date = t.max_date
+GROUP BY s.store_id,s.zip_code;
+
+## python config file problem
+import configparser
+
+config = configparser.ConfigParser()
+
+config.read("C:\\Users\\skesi\\OneDrive\\Documents\\output_file\\config.cfg") 
+value = config.get('Files','file1')
+
+import os
+
+import pandas as pd
+def get_file_names():
+    path="C:\\Users\\skesi\\Downloads\\Data\\"
+    file_names=os.listdir(path)
+    
+    for i in file_names:
+        if i == value:
+            p=path+i
+            output_path='C:\\Users\\skesi\\OneDrive\\Documents\\output_file\\'+value
+            file_extension = os.path.splitext(p)[1]  # Get the file extension
+    
+            if file_extension == '.xlsx':
+                dfs = pd.read_excel(p)
+                
+                dfs.to_excel(output_path, index=True)
+            else:
+                df=pd.read_csv(p)
+                print("df_"+i)
+                
+        
+get_file_names()
